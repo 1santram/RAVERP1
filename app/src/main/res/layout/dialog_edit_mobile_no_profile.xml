@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <data>
     <variable
-        name="login"
-        type="com.rav.raverp.data.model.api.Login"/>
+        name="getProfile"
+        type="com.rav.raverp.data.model.api.GetProfile"/>
 </data>
 
     <androidx.cardview.widget.CardView
@@ -68,8 +68,9 @@
             <androidx.appcompat.widget.AppCompatEditText
                 style="@style/EditTextStyle"
                 android:id="@+id/editmobilenochange"
-                android:text="@{login.strPhone}"
-                android:inputType="textCapCharacters"
+                android:text="@{getProfile.strPhone}"
+                android:maxLength="10"
+                android:inputType="phone"
                 android:singleLine="true" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

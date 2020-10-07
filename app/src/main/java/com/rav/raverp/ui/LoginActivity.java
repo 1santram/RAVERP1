@@ -114,7 +114,6 @@ public class LoginActivity extends AppCompatActivity {
                                     json);
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.putExtra("dash",role);
                             startActivity(intent);
                             String welcome = getString(R.string.welcome);
                             ViewUtils.showToast(welcome);

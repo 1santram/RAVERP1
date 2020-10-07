@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClientlocal {
     private static Retrofit retrofit = null;
-    private static String BASE_URL_local ="http://192.168.29.136/api/ravbizAPI/";
+    private static String BASE_URL_local ="http://ravbiz.in/api/ravbizAPI/";
 
 
 

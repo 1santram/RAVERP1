@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
     private static Retrofit retrofit = null;
-    private static String BASE_URL ="http://192.168.29.136/api/ravbizAPI/";
+    private static String BASE_URL ="http://ravbiz.in/api/ravbizAPI/";
 
     public static Retrofit getClient() {
         if (retrofit == null) {

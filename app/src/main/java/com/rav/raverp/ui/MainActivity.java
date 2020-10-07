@@ -2,10 +2,8 @@ package com.rav.raverp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,8 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.widget.ViewUtils;
-import androidx.core.text.PrecomputedTextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -23,19 +19,35 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.rav.raverp.MyApplication;
 import com.rav.raverp.R;
 import com.rav.raverp.View.ExpandableNavigationListView;
-import com.rav.raverp.data.local.prefs.PrefsHelper;
 import com.rav.raverp.data.model.ChildModel;
 import com.rav.raverp.data.model.HeaderModel;
+import com.rav.raverp.data.model.api.ApiResponse;
+import com.rav.raverp.data.model.api.GetProfile;
 import com.rav.raverp.data.model.api.Login;
-import com.rav.raverp.ui.fragment.DashBoardFragment;
-import com.rav.raverp.ui.fragment.GoalFragment;
-import com.rav.raverp.ui.fragment.PloastAvailabilityFragment;
-import com.rav.raverp.ui.fragment.WalletFragment;
+import com.rav.raverp.network.ApiClientlocal;
+import com.rav.raverp.network.ApiHelper;
+
+
+import com.rav.raverp.ui.fragment.Associate.CustomerListFragment;
+import com.rav.raverp.ui.fragment.Associate.DashBoardAssociateFragment;
+import com.rav.raverp.ui.fragment.Associate.FollowUpLeadListFragment;
+import com.rav.raverp.ui.fragment.Associate.MyGoalListFragment;
+import com.rav.raverp.ui.fragment.Associate.PloastAvailabilityFragment;
+import com.rav.raverp.ui.fragment.Associate.Wallet;
+
+import com.rav.raverp.ui.fragment.Operator.DashBoardOperatorFragment;
+import com.rav.raverp.ui.fragment.Operator.LeadListFragment;
+import com.rav.raverp.utils.ViewUtils;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,6 +59,10 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     TextView editprodile;
     DrawerLayout drawer;
+    private Login login;
+    private ApiHelper apiHelper;
+    TextView Name,Role;
+    ImageView iamgeprofile;
 
 
     private ExpandableNavigationListView navigationExpandableListView;
@@ -58,8 +74,11 @@ public class MainActivity extends AppCompatActivity
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Dashboard");
         setSupportActionBar(toolbar);
+        login = MyApplication.getLoginModel();
+
 
         navigationExpandableListView = (ExpandableNavigationListView) findViewById(R.id.expandable_navigation);
+
 
         drawer = findViewById(R.id.drawer_layouts);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -70,23 +89,93 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        View header = navigationView.getHeaderView(0);
+        Name=(TextView)header.findViewById(R.id.name);
+        iamgeprofile=(ImageView)header.findViewById(R.id.iamgeprofile);
+        Role=(TextView)header.findViewById(R.id.role) ;
+
+
+        apiHelper = ApiClientlocal.getClient().create(ApiHelper.class);
+        GetProfileApi();
 
 
 
+        Login login=MyApplication.getLoginModel();
+        if (login.getStrRole().equalsIgnoreCase("Associate")){
 
-
-       /* String a=getIntent().getStringExtra("dash");
-        if (getIntent().getStringExtra("dash").equalsIgnoreCase("Role")){
             show1stDashboard();
-        }else{
+        }
+        if (login.getStrRole().equalsIgnoreCase("Operator")){
             show2ndDashboard();
-        }*/
+
+        }
+        if (login.getStrRole().equalsIgnoreCase("Admin")){
+
+        }
+        if (login.getStrRole().equalsIgnoreCase("")){
+
+        }
 
 
-        show1stDashboard();
 
 
 
+    }
+
+    private void GetProfileApi() {
+
+        String loginid=login.getStrLoginID();
+        Integer role=login.getIntRoleID();
+        Call<ApiResponse<List<GetProfile>>> GetProfileCall = apiHelper.getProfile(loginid,role);
+        GetProfileCall.enqueue(new Callback<ApiResponse<List<GetProfile>>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<List<GetProfile>>> call,
+                                   @NonNull Response<ApiResponse<List<GetProfile>>> response) {
+
+                if (response.isSuccessful()) {
+
+                    if (response != null) {
+                        if (response.body().getResponse().equalsIgnoreCase("Success")) {
+                            List<GetProfile> login = response.body().getBody();
+
+                            String profile = login.get(0).getStrProfilePic();
+                            String email = login.get(0).getStrEmail();
+                            String mobile = login.get(0).getStrPhone();
+                            String role= login.get(0).getStrRole();
+                            Role.setText(role);
+
+
+                            String name = login.get(0).getStrDisplayName();
+                            Name.setText(name);
+
+                            Glide.with(iamgeprofile.getContext()).load("http://192.168.29.136" + profile)
+                                    .placeholder(R.drawable.account)
+                                    .into(iamgeprofile);
+
+
+
+
+
+
+                        } else {
+
+
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<List<GetProfile>>> call,
+                                  @NonNull Throwable t) {
+                if (!call.isCanceled()) {
+
+                    ViewUtils.showToast(t.getLocalizedMessage());
+                }
+                t.printStackTrace();
+            }
+        });
     }
 
     private void show1stDashboard() {
@@ -102,6 +191,20 @@ public class MainActivity extends AppCompatActivity
                 .addHeaderModel(
                         new HeaderModel("Goal", R.drawable.ic_baseline_my_location_24, true)
                                 .addChildModel(new ChildModel("My Goal",R.drawable.ic_baseline_arrow_forward_24)))
+                .addHeaderModel(
+                        new HeaderModel("Lead Management", R.drawable.ic_baseline_my_location_24, true)
+                                .addChildModel(new ChildModel("Lead List",R.drawable.ic_baseline_arrow_forward_24))
+                                .addChildModel(new ChildModel("Follow UP Lead List",R.drawable.ic_baseline_arrow_forward_24)))
+                .addHeaderModel(
+                        new HeaderModel("Site Visit", R.drawable.ic_baseline_my_location_24, true)
+                                .addChildModel(new ChildModel("Site Visit Request",R.drawable.ic_baseline_arrow_forward_24))
+                                .addChildModel(new ChildModel("Site Visit Request Status",R.drawable.ic_baseline_arrow_forward_24)))
+
+                .addHeaderModel(
+                        new HeaderModel("Customer Management", R.drawable.ic_baseline_my_location_24, true)
+                                .addChildModel(new ChildModel("Add Customer",R.drawable.ic_baseline_arrow_forward_24)))
+
+
 
                 .build()
                 .addOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -112,7 +215,7 @@ public class MainActivity extends AppCompatActivity
                         //drawer.closeDrawer(GravityCompat.START);
                         if (id == 0) {
                             toolbar.setTitle("Dashboard");
-                            Fragment fragment=new DashBoardFragment();
+                            Fragment fragment=new DashBoardAssociateFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.homepage, fragment,"MYFRAGMENT");
                             transaction.addToBackStack("MYFRAGMENT").commit();
@@ -144,29 +247,68 @@ public class MainActivity extends AppCompatActivity
                             }
                         }else if (groupPosition==2){
                             if (id == 0) {
-                                toolbar.setTitle("Wallet");
-                                Fragment fragment=new WalletFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.homepage, fragment);
-                                transaction.addToBackStack(null).commit();
-                                drawer.closeDrawer(GravityCompat.START);
+
                             }
                         }if (groupPosition==3){
                             if (id == 0) {
                                 toolbar.setTitle("Goal List");
-                                Fragment fragment=new GoalFragment();
+                                Fragment fragment=new MyGoalListFragment();
                                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.homepage, fragment);
                                 transaction.addToBackStack(null).commit();
                                 drawer.closeDrawer(GravityCompat.START);
                             }
                         }
+                        if (groupPosition==4){
+                            if (id == 0) {
+                                toolbar.setTitle("Lead List");
+                                Fragment fragment=new LeadListFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.homepage, fragment);
+                                transaction.addToBackStack(null).commit();
+                                drawer.closeDrawer(GravityCompat.START);
+                            }
+                            if (id == 1) {
+                                toolbar.setTitle("Follow UP Lead List");
+                                Fragment fragment=new FollowUpLeadListFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.homepage, fragment);
+                                transaction.addToBackStack(null).commit();
+                                drawer.closeDrawer(GravityCompat.START);
+
+
+                            }
+                        }else if (groupPosition==5){
+                            if (id == 0) {
+
+                            }
+
+                            if (id == 1) {
+
+                            }
+                        }
+                        else if (groupPosition==6){
+                            if (id == 0) {
+                                toolbar.setTitle("Customer List");
+                                Fragment fragment=new CustomerListFragment();
+                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                                transaction.replace(R.id.homepage, fragment);
+                                transaction.addToBackStack(null).commit();
+                                drawer.closeDrawer(GravityCompat.START);
+                            }
+
+                            }
+
+
+
+
+
 
                         return false;
                     }
                 });
 
-        Fragment fragment=new DashBoardFragment();
+        Fragment fragment=new DashBoardAssociateFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.homepage, fragment,"MYFRAGMENT");
         transaction.addToBackStack("MYFRAGMENT").commit();
@@ -174,19 +316,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void show2ndDashboard() {
-
         navigationExpandableListView
                 .init(this)
-                .addHeaderModel(new HeaderModel("Home",R.drawable.ic_home_black_24dp))
+                .addHeaderModel(new HeaderModel("Dashboard",R.drawable.ic_home_black_24dp))
                 .addHeaderModel(
-                        new HeaderModel("Home 1", R.drawable.ic_baseline_my_location_24, true)
-                                .addChildModel(new ChildModel("abc",R.drawable.ic_home_black_24dp)))
+                        new HeaderModel("Lead Management", R.drawable.ic_baseline_my_location_24, true)
+                                .addChildModel(new ChildModel("Lead List",R.drawable.ic_baseline_arrow_forward_24))
+                                .addChildModel(new ChildModel("Follow UP Lead List",R.drawable.ic_baseline_arrow_forward_24)))
                 .addHeaderModel(
-                        new HeaderModel("Home 2", R.drawable.add, true)
-                                .addChildModel(new ChildModel("kbc",R.drawable.ic_home_black_24dp)))
-                .addHeaderModel(
-                        new HeaderModel("Home 2", R.drawable.add, true)
-                                .addChildModel(new ChildModel("lbc",R.drawable.ic_home_black_24dp)))
+                        new HeaderModel("Site Visit", R.drawable.ic_baseline_my_location_24, true)
+                                .addChildModel(new ChildModel("Site Visit Request",R.drawable.ic_baseline_arrow_forward_24))
+                                .addChildModel(new ChildModel("Site Visit Request Status",R.drawable.ic_baseline_arrow_forward_24)))
 
                 .build()
                 .addOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
@@ -196,13 +336,14 @@ public class MainActivity extends AppCompatActivity
                         navigationExpandableListView.setSelected(groupPosition);
                         //drawer.closeDrawer(GravityCompat.START);
                         if (id == 0) {
-                            toolbar.setTitle("Home");
-                            Fragment fragment=new DashBoardFragment();
+                            toolbar.setTitle("Dashboard");
+                            Fragment fragment=new DashBoardOperatorFragment();
                             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                             transaction.replace(R.id.homepage, fragment,"MYFRAGMENT");
                             transaction.addToBackStack("MYFRAGMENT").commit();
                             drawer.closeDrawer(GravityCompat.START);
                         } else if (id == 1) {
+
 
                         } else if (id == 2) {
 
@@ -219,30 +360,19 @@ public class MainActivity extends AppCompatActivity
 
                         if (groupPosition==1){
                             if (id == 0) {
-                                toolbar.setTitle("abc");
-                                Fragment fragment=new PloastAvailabilityFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.homepage, fragment);
-                                transaction.addToBackStack(null).commit();
-                                drawer.closeDrawer(GravityCompat.END);
+
+                            }
+                            if (id == 1) {
+
                             }
                         }else if (groupPosition==2){
                             if (id == 0) {
-                                toolbar.setTitle("kbc");
-                                Fragment fragment=new WalletFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.homepage, fragment);
-                                transaction.addToBackStack(null).commit();
-                                drawer.closeDrawer(GravityCompat.END);
+
                             }
-                        }if (groupPosition==3){
-                            if (id == 0) {
-                                toolbar.setTitle("lbc");
-                                Fragment fragment=new GoalFragment();
-                                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                                transaction.replace(R.id.homepage, fragment);
-                                transaction.addToBackStack(null).commit();
-                                drawer.closeDrawer(GravityCompat.END);
+
+                            if (id == 1) {
+
+
                             }
                         }
 
@@ -250,7 +380,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        Fragment fragment=new DashBoardFragment();
+        Fragment fragment=new DashBoardOperatorFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.homepage, fragment,"MYFRAGMENT");
         transaction.addToBackStack("MYFRAGMENT").commit();
@@ -266,34 +396,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layouts);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            DashBoardFragment fragment;
-            fragment = (DashBoardFragment) getSupportFragmentManager().findFragmentByTag("MYFRAGMENT");
-            if (fragment==null) {
-                toolbar.setTitle("Home");
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.homepage, new DashBoardFragment(toolbar),"MYFRAGMENT");
-                fragmentTransaction.addToBackStack("MYFRAGMENT").commit();
-                navigationExpandableListView.setSelected(0);
-            }else{
-                if ( fragment.isVisible()) {
-                    Intent a = new Intent(Intent.ACTION_MAIN);
-                    a.addCategory(Intent.CATEGORY_HOME);
-                    a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(a);
-                }else{
-                    toolbar.setTitle("Home");
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.homepage, new DashBoardFragment(),"MYFRAGMENT");
-                    fragmentTransaction.addToBackStack("MYFRAGMENT").commit();
-                    navigationExpandableListView.setSelected(0);
-                }
-            }
 
-        }
+
+        onBackPressed();
     }
 
     @Override

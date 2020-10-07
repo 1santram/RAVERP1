@@ -1,4 +1,4 @@
-package com.rav.raverp.ui.fragment;
+package com.rav.raverp.ui.fragment.Operator;
 
 import android.content.Intent;
 import android.os.Build;
@@ -9,37 +9,32 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
-import com.rav.raverp.MyApplication;
 import com.rav.raverp.R;
 import com.rav.raverp.data.interfaces.DialogActionCallback;
 import com.rav.raverp.data.local.prefs.PrefsHelper;
-import com.rav.raverp.data.model.api.Login;
-import com.rav.raverp.data.model.local.ChangePassword;
 import com.rav.raverp.ui.ChangePasswordActivity;
 import com.rav.raverp.ui.EditProfileActivity;
 import com.rav.raverp.ui.LoginActivity;
 import com.rav.raverp.utils.AppConstants;
 import com.rav.raverp.utils.ViewUtils;
 
-public class DashBoardFragment extends Fragment {
+public class DashBoardOperatorFragment extends Fragment {
 
     View view;
     androidx.appcompat.widget.Toolbar toolbar;
 
 
-    public DashBoardFragment() {
+    public DashBoardOperatorFragment() {
 
     }
 
-    public DashBoardFragment(androidx.appcompat.widget.Toolbar toolbar) {
+    public DashBoardOperatorFragment(androidx.appcompat.widget.Toolbar toolbar) {
         this.toolbar=toolbar;
     }
 
@@ -54,7 +49,7 @@ public class DashBoardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       view= inflater.inflate(R.layout.dashboard_fragment, container, false);
+       view= inflater.inflate(R.layout.dashboard_operator_fragment, container, false);
 
        return  view;
     }

@@ -12,7 +12,7 @@ public class AppConstants {
     public static final String ChangeAssociateMobileNo="ChangeAssociateMobileNo";
     public static final String ChangeAssociateEmailId="ChangeAssociateEmailId";
     public static final  String Profile="Profile";
-
+    public static final  String GetMyGoal="GetMyGoal";
 
 
     public static final String STATUS_CODE_SUCCESS = "success";

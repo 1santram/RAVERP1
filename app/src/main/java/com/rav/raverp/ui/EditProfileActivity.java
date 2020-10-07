@@ -57,6 +57,8 @@ import com.rav.raverp.network.ApiClient;
 import com.rav.raverp.network.ApiClientlocal;
 import com.rav.raverp.network.ApiHelper;
 import com.rav.raverp.utils.AppConstants;
+import com.rav.raverp.utils.CommonUtils;
+import com.rav.raverp.utils.NetworkUtils;
 import com.rav.raverp.utils.ScreenUtils;
 import com.rav.raverp.utils.ViewUtils;
 
@@ -97,6 +99,8 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
     private Login login;
     private GetProfile getProfile;
     String EditMobileChange,EditEmailChange;
+    String msg = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +114,9 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
         ScreenUtils.setupUI(binding.parentLayout, EditProfileActivity.this);
 
          login = MyApplication.getLoginModel();
+
          binding.setLogin(login);
+        binding.setGetProfile(getProfile);
 
 
 
@@ -140,7 +146,8 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
     private void GetProfileApi() {
 
         String loginid=login.getStrLoginID();
-        Call<ApiResponse<List<GetProfile>>> GetProfileCall = apiHelper.getProfile(loginid);
+        Integer role=login.getIntRoleID();
+        Call<ApiResponse<List<GetProfile>>> GetProfileCall = apiHelper.getProfile(loginid,role);
         GetProfileCall.enqueue(new Callback<ApiResponse<List<GetProfile>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<GetProfile>>> call,
@@ -154,9 +161,16 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
 
 
                             String email = login.get(0).getStrEmail();
+                            binding.setemail.setText(email.toString());
                             String mobile = login.get(0).getStrPhone();
+                            binding.setmobile.setText(mobile.toString());
                             String name = login.get(0).getStrDisplayName();
                             String profile = login.get(0).getStrProfilePic();
+                            Glide.with(binding.profileImageView.getContext()).load("http://192.168.29.136" + profile)
+                                    .placeholder(R.drawable.account)
+                                    .into(binding.profileImageView);
+
+
 
 
 
@@ -191,7 +205,7 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
             filterDialog.setContentView(binding.getRoot());
             filterDialog.setCancelable(true);
             filterDialog.setCanceledOnTouchOutside(true);
-            binding.setLogin(login);
+            binding.setGetProfile(getProfile);
 
 
             ColorDrawable back = new ColorDrawable(Color.TRANSPARENT);
@@ -207,16 +221,14 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
             binding.btncancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(EditProfileActivity.this,EditProfileActivity.class);
-                    startActivity(intent);
+                    filterDialog.dismiss();
                 }
             });
 
             binding.imgcross.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(EditProfileActivity.this,EditProfileActivity.class);
-                    startActivity(intent);
+                    filterDialog.dismiss();
                 }
             });
 
@@ -224,7 +236,8 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
                 @Override
                 public void onClick(View v) {
                     EditEmailChange=  binding.editemailnochange.getText().toString();
-                    GetEmailChange();
+
+                    submitFormEmailId();
                 }
             });
 
@@ -236,14 +249,14 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
     private void GetEmailChange() {
 
         String id=login.getStrLoginID();
-        String EMAIL=login.getStrEmail();
-
-        Call<EditEmailModel>getEditEmailCall = apiHelper.getEditEmail(id,EditEmailChange);
+        Integer role=login.getIntRoleID();
+        showProgress(true);
+        Call<EditEmailModel>getEditEmailCall = apiHelper.getEditEmail(id,EditEmailChange,role);
         getEditEmailCall.enqueue(new Callback<EditEmailModel>() {
             @Override
             public void onResponse(@NonNull Call<EditEmailModel> call,
                                    @NonNull Response<EditEmailModel> response) {
-
+                showProgress(false);
                 if (response.isSuccessful()) {
                     if (response.body().getResponse().equalsIgnoreCase("Success")) {
 
@@ -275,6 +288,7 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
             public void onFailure(@NonNull Call<EditEmailModel> call,
                                   @NonNull Throwable t) {
                 if (!call.isCanceled()) {
+                    showProgress(false);
                     ViewUtils.showToast(t.getLocalizedMessage());
                 }
                 t.printStackTrace();
@@ -291,7 +305,7 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
         filterDialog.setContentView(binding.getRoot());
         filterDialog.setCancelable(true);
         filterDialog.setCanceledOnTouchOutside(true);
-        binding.setLogin(login);
+        binding.setGetProfile(getProfile);
 
 
 
@@ -310,16 +324,14 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
         binding.btncancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(EditProfileActivity.this,EditProfileActivity.class);
-                startActivity(intent);
+                filterDialog.dismiss();
             }
         });
 
         binding.imgcross.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent=new Intent(EditProfileActivity.this,EditProfileActivity.class);
-               startActivity(intent);
+               filterDialog.dismiss();
             }
         });
 
@@ -327,24 +339,79 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
             @Override
             public void onClick(View v) {
                 EditMobileChange=  binding.editmobilenochange.getText().toString();
-                GetMobileChange();
+                submitFormMobile();
+               // GetMobileChange();
             }
         });
 
 
     }
 
+    private void submitFormMobile() {
+        if (!validateMobileNo()) {
+            return;
+        }
+
+
+       checkNetwork();
+
+    }
+
+    private boolean validateMobileNo() {
+        if (!CommonUtils.isValidMobile(EditMobileChange)){
+            msg = getString(R.string.Please_Enter_Valid_Mobile_No);
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+    private void submitFormEmailId() {
+        if (!validateEmailId()) {
+            return;
+        }
+
+        GetEmailChange();
+
+    }
+
+    private boolean validateEmailId() {
+      if (CommonUtils.isValidEmail(EditMobileChange)){
+          msg = getString(R.string.Please_Enter_Valid_Email_ID);
+          return false;
+      } else {
+
+      }
+        return true;
+    }
+
+    public void checkNetwork() {
+        if (NetworkUtils.isNetworkConnected()) {
+         GetMobileChange();
+        } else {
+            ViewUtils.showOfflineDialog(mContext, new DialogActionCallback() {
+                @Override
+                public void okAction() {
+                    checkNetwork();
+                }
+            });
+        }
+    }
+
     private void GetMobileChange() {
 
         String id=login.getStrLoginID();
-        String phone=login.getStrPhone();
 
-        Call<EditMobileModel>getEditEmailCall = apiHelper.getEditMobile(id,EditMobileChange);
+        Integer role=login.getIntRoleID();
+        showProgress(true);
+        Call<EditMobileModel>getEditEmailCall = apiHelper.getEditMobile(id,EditMobileChange,role);
         getEditEmailCall.enqueue(new Callback<EditMobileModel>() {
             @Override
             public void onResponse(@NonNull Call<EditMobileModel> call,
                                    @NonNull Response<EditMobileModel> response) {
-
+                showProgress(false);
                 if (response.isSuccessful()) {
                     if (response.body().getResponse().equalsIgnoreCase("Success")) {
 
@@ -365,9 +432,6 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
 
                 }
 
-
-
-
             }
 
 
@@ -377,6 +441,7 @@ public class EditProfileActivity extends BaseActivity implements ArrowBackPresse
             public void onFailure(@NonNull Call<EditMobileModel> call,
                                   @NonNull Throwable t) {
                 if (!call.isCanceled()) {
+                    showProgress(false);
                     ViewUtils.showToast(t.getLocalizedMessage());
                 }
                 t.printStackTrace();

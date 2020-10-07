@@ -43,6 +43,7 @@ public class ChangePasswordActivity extends BaseActivity implements ArrowBackPre
     private ActivityChangePasswordBinding binding;
     private String oldPassword, newPassword, confirmPassword;
     private ApiHelper apiHelper;
+    private Login login;
 
 
 
@@ -64,6 +65,8 @@ public class ChangePasswordActivity extends BaseActivity implements ArrowBackPre
                 .addTextChangedListener(new MyTextWatcher(binding.newPasswordEditText));
         binding.confirmPasswordEditText
                 .addTextChangedListener(new MyTextWatcher(binding.confirmPasswordEditText));
+        login = MyApplication.getLoginModel();
+        binding.setLogin(login);
     }
 
     private void submitForm() {
@@ -99,7 +102,10 @@ public class ChangePasswordActivity extends BaseActivity implements ArrowBackPre
     private void changePassword() {
         binding.setLoaderVisibility(true);
         binding.setButtonVisibility(false);
-        Call<ApiResponse<List<ChangePassword>>> ChangePasswordCall= apiHelper.UpdateChangePassword(MyApplication.getLoginId(),oldPassword,newPassword,confirmPassword);
+
+        String loginid=login.getStrLoginID();
+        Integer role=login.getIntRoleID();
+        Call<ApiResponse<List<ChangePassword>>> ChangePasswordCall= apiHelper.UpdateChangePassword(loginid,oldPassword,newPassword,confirmPassword,role);
         ChangePasswordCall.enqueue(new Callback<ApiResponse<List<ChangePassword>>>() {
             @Override
             public void onResponse(@NonNull Call<ApiResponse<List<ChangePassword>>> call,
@@ -170,6 +176,10 @@ public class ChangePasswordActivity extends BaseActivity implements ArrowBackPre
         newPassword = binding.newPasswordEditText.getText().toString().trim();
         if (CommonUtils.isNullOrEmpty(newPassword)) {
             binding.newPasswordInputLayout.setError("Please Enter New Password.");
+            requestFocus(binding.newPasswordEditText);
+            return false;
+        } if (!CommonUtils.isPasswordValid(newPassword)) {
+            binding.newPasswordInputLayout.setError(getString(R.string.invalid_password));
             requestFocus(binding.newPasswordEditText);
             return false;
         } else {

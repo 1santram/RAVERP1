@@ -64,7 +64,7 @@
     <string name="action_forgot_password">Forgot password ?</string>
     <string name="action_login">Login</string>
     <string name="error_password_mismatching">New Password &amp; Retyped New Password must be same.</string>
-    <string name="invalid_password">Password must contain at least 01 Upper Case, 01 Numeric &amp; 01 Special character.</string>
+    <string name="invalid_password">Password must contain at least 6 digits.</string>
     <string name="action_filter">Filter</string>
 
     <string name="welcome">"Welcome ! "</string>
@@ -86,6 +86,8 @@
     <string name="msg_you_dont_have_access">You don\'t have currently access to this app.
         Please contact your account administrator for access.</string>
     <string name="title_not_authorized">Not Authorized</string>
+    <string name="Please_Enter_Valid_Email_ID">Please Enter Valid Email ID</string>
+    <string name="Please_Enter_Valid_Mobile_No">Please Enter 10 digits Mobile No.</string>
 
     <string-array name="select_district_array">
 

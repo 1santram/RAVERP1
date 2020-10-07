@@ -1,4 +1,4 @@
-package com.rav.raverp.ui.fragment;
+package com.rav.raverp.ui.fragment.Associate;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -37,7 +37,6 @@ import com.rav.raverp.data.model.api.GetProject;
 import com.rav.raverp.data.model.api.PlotAvailable;
 import com.rav.raverp.databinding.DialogPlotFilterBinding;
 import com.rav.raverp.network.ApiClient;
-import com.rav.raverp.network.ApiClientlocal;
 import com.rav.raverp.network.ApiHelper;
 import com.rav.raverp.ui.PlotAvailabilityActivityDetails;
 import com.rav.raverp.utils.ViewUtils;
@@ -90,7 +89,7 @@ public class PloastAvailabilityFragment extends Fragment {
         apiHelper = ApiClient.getClient().create(ApiHelper.class);
 
         recyclerPloatList = view.findViewById(R.id.recycler_view);
-      no_records_text_view=(TextView)view.findViewById(R.id.no_records_text_view);
+        no_records_text_view=(TextView)view.findViewById(R.id.no_records_text_view);
         recyclerPloatList.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerPloatList.getRecycledViewPool().clear();
 
@@ -126,14 +125,6 @@ public class PloastAvailabilityFragment extends Fragment {
                             List<PlotAvailable> plotAvailableList = response.body().getBody();
                             plotAvailableListAdapter=new PlotAvailableListAdapter(getActivity(),listItemClickListener,plotAvailableList);
                             recyclerPloatList.setAdapter(plotAvailableListAdapter);
-                            ViewUtils.showSuccessDialog(getContext(), response.body().getMessage(),
-                                    new DialogActionCallback() {
-                                        @Override
-                                        public void okAction() {
-
-
-                                        }
-                                    });
 
 
 

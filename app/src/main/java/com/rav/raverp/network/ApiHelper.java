@@ -1,11 +1,15 @@
 package com.rav.raverp.network;
 import com.rav.raverp.data.model.api.ApiResponse;
+import com.rav.raverp.data.model.api.CustomerListModel;
 import com.rav.raverp.data.model.api.EditEmailModel;
 import com.rav.raverp.data.model.api.EditMobileModel;
+import com.rav.raverp.data.model.api.FollowUpListModel;
 import com.rav.raverp.data.model.api.GetBlock;
 import com.rav.raverp.data.model.api.GetProfile;
 import com.rav.raverp.data.model.api.GetProject;
+import com.rav.raverp.data.model.api.LeadListModel;
 import com.rav.raverp.data.model.api.Login;
+import com.rav.raverp.data.model.api.MyGoalListModel;
 import com.rav.raverp.data.model.api.PlotAvailable;
 import com.rav.raverp.data.model.local.ChangePassword;
 
@@ -32,7 +36,8 @@ public interface ApiHelper {
     Call<ApiResponse<List<ChangePassword>>> UpdateChangePassword(@Query("LoginId") String LoginId,
                                                                  @Query("OldPassword") String Password,
                                                                  @Query("NewPassword") String NewPassword,
-                                                                 @Query("ConfirmPassword")String ConfirmPassword);
+                                                                 @Query("ConfirmPassword")String ConfirmPassword,
+                                                                 @Query("RoleId")Integer RoleId);
     @Headers({"Content-Type: application/json"})
     @GET(ApiEndPoint.Get_Project)
     Call<ApiResponse<List<GetProject>>> getProject();
@@ -46,13 +51,42 @@ public interface ApiHelper {
     Call<ApiResponse<List<PlotAvailable>>> getPlotAvailabilitylistfilter(@Query("projectId") String projectId,
                                                                                       @Query("blockId") String blockId);
     @Headers({"Content-Type: application/json"})
-    @POST(ApiEndPoint.ChangeAssociateMobileNo)
-    Call<EditMobileModel>getEditMobile(@Query("loginId")String loginId, @Query("MobileNo")String MobileNo);
+    @POST(ApiEndPoint.ChangeMobileNo)
+    Call<EditMobileModel>getEditMobile(@Query("loginId")String loginId, @Query("MobileNo")String MobileNo,
+                                                               @Query("RoleId")Integer RoleId );
     @Headers({"Content-Type: application/json"})
-    @POST(ApiEndPoint.ChangeAssociateEmailId)
-    Call<EditEmailModel>getEditEmail(@Query("loginId")String loginId, @Query("EmailId")String EmailId);
+    @POST(ApiEndPoint.ChangeEmailId)
+    Call<EditEmailModel>getEditEmail(@Query("loginId")String loginId, @Query("EmailId")String EmailId,
+                                                      @Query("RoleId")Integer RoleId);
 
     @Headers({"Content-Type: application/json"})
     @POST(ApiEndPoint.Profile)
-    Call<ApiResponse<List<GetProfile>>> getProfile(@Query("LoginId") String LoginId);
+    Call<ApiResponse<List<GetProfile>>> getProfile(@Query("LoginId") String LoginId, @Query("RoleId") Integer RoleId);
+
+    @Headers({"Content-Type: application/json"})
+    @POST(ApiEndPoint.GetMyGoal)
+    Call<ApiResponse<List<MyGoalListModel>>> getMyGoalListModel(@Query("LoginId") String LoginId,@Query("roleId") Integer roleId);
+
+    @Headers({"Content-Type: application/json"})
+    @GET(ApiEndPoint.GetAllLead)
+    Call<ApiResponse<List<LeadListModel>>> getLeadListModel();
+
+    @Headers({"Content-Type: application/json"})
+    @POST(ApiEndPoint.GetLead)
+    Call<ApiResponse<List<LeadListModel>>>getGoLeadListModel(@Query("requesterName") String requesterName);
+
+    @Headers({"Content-Type: application/json"})
+    @GET(ApiEndPoint.GetAllCustomer)
+    Call<ApiResponse<List<CustomerListModel>>> getCustomerListModel();
+
+    @Headers({"Content-Type: application/json"})
+    @POST(ApiEndPoint.GetCustomer)
+    Call<ApiResponse<List<CustomerListModel>>>getGoCustomerListModel(@Query("Name") String requesterName,
+                                                                     @Query("EmailId")String EmailId,
+                                                                     @Query("Mobile")String Mobile);
+
+    @Headers({"Content-Type: application/json"})
+    @GET(ApiEndPoint.GetAllLeadFollowUP)
+    Call<ApiResponse<List<FollowUpListModel>>>getFollowUpListModel();
+
 }

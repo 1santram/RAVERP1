@@ -18,13 +18,24 @@
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <activity android:name=".ui.FollowUPLeadListActivityDetails"></activity>
+        <activity android:name=".ui.CustomerListActivityDetails" />
+        <activity
+            android:name=".ui.LeadListActivityDetails"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".ui.MyGoalListActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.PlotAvailabilityActivityDetails"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"

@@ -3,11 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="mainActivity"
-            type="com.rav.raverp.ui.fragment.DashBoardFragment" />
-    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -58,7 +53,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Plot"
+                                android:text="Operator"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_12sdp" />
@@ -71,7 +66,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Booking Plot"
+                                android:text="All Operator"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -99,7 +94,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Available Plot"
+                                android:text="Active Operator"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -149,7 +144,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Member"
+                                android:text="Attandence"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_12sdp" />
@@ -162,7 +157,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Active"
+                                android:text="To day"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -187,7 +182,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="IN Active"
+                                android:text="Previous Day"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -238,7 +233,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Direct Member"
+                                android:text="Leave"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_12sdp" />
@@ -251,7 +246,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Direct"
+                                android:text="Holi Day"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -277,7 +272,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="IN Direct"
+                                android:text="Occasional Leave"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_10sdp" />
@@ -326,7 +321,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Business"
+                                android:text="Lead Request"
                                 android:layout_marginTop="@dimen/_10sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_12sdp" />
@@ -339,7 +334,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Direct"
+                                android:text="All Lead"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_9sdp" />
@@ -364,7 +359,7 @@
                                 android:layout_width="@dimen/_200sdp"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/googlesans_regular"
-                                android:text="Matching"
+                                android:text="All Lead Requests"
                                 android:layout_marginTop="@dimen/_5sdp"
                                 android:textAppearance="@style/TextAppearance.AppCompat.Menu"
                                 android:textSize="@dimen/_9sdp" />

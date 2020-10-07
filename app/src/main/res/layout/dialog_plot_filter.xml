@@ -16,57 +16,59 @@
             android:orientation="vertical"
             android:paddingLeft="@dimen/_7sdp"
             android:paddingRight="@dimen/_7sdp">
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/googlesans_medium"
                 android:text="Project Name"
-                android:textSize="@dimen/_12sdp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/black_700"
-                android:fontFamily="@font/googlesans_medium"
-                android:layout_marginTop="@dimen/_14sdp"/>
+                android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/project_name_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edit_text"
-                android:layout_marginTop="@dimen/_5sdp" />
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/bg_edit_text" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/googlesans_medium"
                 android:text="Block Name"
-                android:textSize="@dimen/_12sdp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textColor="@color/black_700"
-                android:fontFamily="@font/googlesans_medium"
-                android:layout_marginTop="@dimen/_14sdp"/>
+                android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/block_name_spinner"
                 android:layout_width="match_parent"
-                android:background="@drawable/bg_edit_text"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp" />
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/bg_edit_text" />
 
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/Get_Plot"
+                style="@style/ButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_50sdp"
                 android:layout_marginTop="@dimen/_24sdp"
+                android:layout_marginRight="@dimen/_50sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
-                android:text="Get Plot"
-                style="@style/ButtonStyle"
-                android:textColor="@color/black_800"
                 android:fontFamily="@font/googlesans_medium"
-                android:textSize="@dimen/_15sdp"
                 android:gravity="center"
                 android:padding="@dimen/_13sdp"
-                android:layout_marginLeft="@dimen/_50sdp"
-                android:layout_marginRight="@dimen/_50sdp"
+                android:text="Get Plot"
                 android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                android:textColor="@color/black_800"
+                android:textSize="@dimen/_15sdp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
